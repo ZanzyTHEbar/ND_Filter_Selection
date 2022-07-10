@@ -7,36 +7,19 @@ Config::~Config() {}
 
 void Config::begin()
 {
-    if (_preferences != nullptr)
+    if (_preferences.begin(_configName))
     {
-        if (_preferences->begin(_configName, false, _partitionName))
-        {
-            log_i("Config %s opened\n", _configName);
-            _preferences->end();
-            log_d("Config initialized\n");
-            stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
-        }
-        else
-        {
-            log_e("Config %s not opened\n", _configName);
-        }
+        log_i("Config %s opened\n", _configName);
+        _preferences.end();
+        log_d("Config initialized\n");
+        stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
     }
     else
     {
-        log_e("Config %s not initialised\n", _configName);
-        _preferences = new Preferences();
-        if (_preferences->begin(_configName, false, _partitionName))
-        {
-            log_i("Config %s opened\n", _configName);
-            _preferences->end();
-            log_d("Config initialized\n");
-            stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
-        }
-        else
-        {
-            log_e("Config %s not opened\n", _configName);
-        }
+        log_e("Config %s not opened\n", _configName);
+        stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::ErrorConfig);
     }
+    delay(100);
 }
 
 /**
@@ -59,9 +42,9 @@ void Config::write(const char *key, T &buff)
     }
 
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Writing);
-    _preferences->begin(_configName, false, _partitionName);
-    _preferences->putBytes(key, (T *)&buff, sizeof(T));
-    _preferences->end();
+    _preferences.begin(_configName);
+    _preferences.putBytes(key, (T *)&buff, sizeof(T));
+    _preferences.end();
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
 }
 
@@ -91,9 +74,9 @@ void Config::write(const char *key, T *&buff)
     }
 
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Writing);
-    _preferences->begin(_configName, false, _partitionName);
-    _preferences->putBytes(key, (T *)buff, sizeof(T));
-    _preferences->end();
+    _preferences.begin(_configName);
+    _preferences.putBytes(key, (T *)buff, sizeof(T));
+    _preferences.end();
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
 }
 
@@ -139,9 +122,9 @@ void Config::read(const char *key, T *buff)
         return;
     }
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Reading);
-    _preferences->begin(_configName, true, _partitionName);
-    _preferences->getBytes(key, (T *)&buff, sizeof(T));
-    _preferences->end();
+    _preferences.begin(_configName, true);
+    _preferences.getBytes(key, (T *)&buff, sizeof(T));
+    _preferences.end();
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
 }
 
@@ -163,27 +146,27 @@ template void Config::read<Config::LDR_t>(const char *key, Config::LDR_t *buff);
 void Config::clear()
 {
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Clearing);
-    _preferences->begin(_configName, false, _partitionName);
-    _preferences->clear();
-    _preferences->end();
+    _preferences.begin(_configName);
+    _preferences.clear();
+    _preferences.end();
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
 }
 
 void Config::remove(const char *key)
 {
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Clearing);
-    _preferences->begin(_configName, false, _partitionName);
-    _preferences->remove(key);
-    _preferences->end();
+    _preferences.begin(_configName);
+    _preferences.remove(key);
+    _preferences.end();
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
 }
 
 size_t Config::getValueLength(const char *key)
 {
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Reading);
-    _preferences->begin(_configName, false, _partitionName);
-    size_t length = _preferences->getBytesLength(key);
-    _preferences->end();
+    _preferences.begin(_configName);
+    size_t length = _preferences.getBytesLength(key);
+    _preferences.end();
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
     return length;
 }
@@ -210,9 +193,9 @@ size_t Config::getValueLength(const char *key)
 byte Config::getType(const char *key)
 {
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Reading);
-    _preferences->begin(_configName, false, _partitionName);
-    byte type = _preferences->getType(key);
-    _preferences->end();
+    _preferences.begin(_configName);
+    byte type = _preferences.getType(key);
+    _preferences.end();
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
     return type;
 }
@@ -220,11 +203,9 @@ byte Config::getType(const char *key)
 size_t Config::freeEntries()
 {
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Reading);
-    _preferences->begin(_configName, false, _partitionName);
-    size_t freeEntries = _preferences->freeEntries();
-    _preferences->end();
+    _preferences.begin(_configName);
+    size_t freeEntries = _preferences.freeEntries();
+    _preferences.end();
     stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
     return freeEntries;
 }
-
-Config config("config", "config"); // Create a config object with the name "config" and the partition name "config"

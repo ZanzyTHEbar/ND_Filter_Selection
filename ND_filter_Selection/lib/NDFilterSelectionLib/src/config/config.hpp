@@ -26,14 +26,13 @@ public:
     friend class LDR;
 
 private:
+    Preferences _preferences;
     struct LDR_t
     {
         const char *key;
         float value;
     };
-    Preferences *_preferences;
     const char *_configName;
     const char *_partitionName;
 };
-extern Config config;
 #endif

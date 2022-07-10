@@ -1,5 +1,7 @@
 #include "ldr.hpp"
 
+Config config("config", "Project_Config");
+
 LDR::LDR() : _GAMMA(0.7), _RL10(50) {}
 
 LDR::~LDR() {}
@@ -29,8 +31,8 @@ void LDR::begin()
     {
         config.write("LDR_Map", ldr_map[i]);
     }
-
-    log_i("LDR: ", config.getValueLength("LDR_Map"));
+    delay(100);
+    log_i("LDR: %d", config.getValueLength("LDR_Map"));
     // config.write("ldr_map", ldrLookupTable);
     config.write("LDR_RL10", _RL10);
     config.write("LDR_GAMMA", _GAMMA);
