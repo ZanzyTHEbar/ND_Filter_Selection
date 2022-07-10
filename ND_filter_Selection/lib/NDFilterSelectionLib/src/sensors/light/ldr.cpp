@@ -7,8 +7,7 @@ LDR::~LDR() {}
 void LDR::begin()
 {
     pinMode(LDR_PIN, INPUT);
-    config.begin();
-    LDR_t ldr_map[] = {
+    Config::LDR_t ldr_map[] = {
         {"Starlight-overcast-no moon", 0.0001},
         {"Venus at brightest", 0.00014},
         {"Starlight-no moon-no airglow", 0.0002},
@@ -25,7 +24,9 @@ void LDR::begin()
         {"Bright sunlight", 111000},
         {"Brightest sunlight", 120000},
     };
-    config.write("LDR_Map", ldr_map);
+    config.begin();
+    for (int i = 0; i < 15; ++i)
+        config.write("LDR_Map", ldr_map[i]);
     // config.write("ldr_map", ldrLookupTable);
     config.write("LDR_RL10", _RL10);
     config.write("LDR_GAMMA", _GAMMA);

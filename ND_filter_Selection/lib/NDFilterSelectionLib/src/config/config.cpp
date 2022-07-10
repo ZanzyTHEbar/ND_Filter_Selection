@@ -78,7 +78,40 @@ template void Config::write<float_t>(const char *key, float_t &buff);
 template void Config::write<double_t>(const char *key, double_t &buff);
 template void Config::write<const char *>(const char *key, const char *&buff);
 template void Config::write<String>(const char *key, String &buff);
-template void Config::write<LDR_t>(const char *key, LDR_t &buff);
+template void Config::write<Config::LDR_t>(const char *key, Config::LDR_t &buff);
+
+template <typename T>
+void Config::write(const char *key, T *&buff)
+{
+    if (stateManager.getCurrentConfigState() == ProgramStates::DeviceStates::ConfigState_e::Reading)
+    {
+        log_e("Config %s is in reading state\n", _configName);
+        stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::ErrorConfig);
+        return;
+    }
+
+    stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Writing);
+    _preferences->begin(_configName, false, _partitionName);
+    _preferences->putBytes(key, (T *)buff, sizeof(T));
+    _preferences->end();
+    stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::Configured);
+}
+
+template void Config::write<uint8_t>(const char *key, uint8_t *&buff);
+template void Config::write<uint16_t>(const char *key, uint16_t *&buff);
+template void Config::write<uint32_t>(const char *key, uint32_t *&buff);
+template void Config::write<uint64_t>(const char *key, uint64_t *&buff);
+template void Config::write<int8_t>(const char *key, int8_t *&buff);
+template void Config::write<int16_t>(const char *key, int16_t *&buff);
+template void Config::write<int32_t>(const char *key, int32_t *&buff);
+template void Config::write<int64_t>(const char *key, int64_t *&buff);
+template void Config::write<bool>(const char *key, bool *&buff);
+template void Config::write<float_t>(const char *key, float_t *&buff);
+template void Config::write<double_t>(const char *key, double_t *&buff);
+template void Config::write<const char *>(const char *key, const char **&buff);
+template void Config::write<String>(const char *key, String *&buff);
+template void Config::write<Config::LDR_t>(const char *key, Config::LDR_t *&buff);
+template void Config::write<Config::LDR_t *>(const char *key, Config::LDR_t *&buff);
 
 /**
  * @brief Reads a value from the config
@@ -125,8 +158,7 @@ template void Config::read<float_t>(const char *key, float_t *buff);
 template void Config::read<double_t>(const char *key, double_t *buff);
 template void Config::read<const char *>(const char *key, const char **buff);
 template void Config::read<String>(const char *key, String *buff);
-template void Config::read<LDR_t>(const char *key, LDR_t *buff);
-
+template void Config::read<Config::LDR_t>(const char *key, Config::LDR_t *buff);
 
 void Config::clear()
 {
@@ -195,4 +227,4 @@ size_t Config::freeEntries()
     return freeEntries;
 }
 
-Config config("config", "config");    // Create a config object with the name "config" and the partition name "config"
+Config config("config", "config"); // Create a config object with the name "config" and the partition name "config"
