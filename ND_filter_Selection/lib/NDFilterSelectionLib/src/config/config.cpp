@@ -132,7 +132,7 @@ void Config::read(const char *key, T *buff)
         return;
     }
 
-    if (sizeof(&buff) != getValueLength(key))
+    if (sizeof(buff) != getValueLength(key))
     {
         log_e("Config::read() - Size of buffer does not match size of value");
         stateManager.setState(ProgramStates::DeviceStates::ConfigState_e::ErrorConfig);

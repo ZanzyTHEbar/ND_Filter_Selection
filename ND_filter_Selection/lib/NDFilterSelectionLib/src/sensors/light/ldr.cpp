@@ -26,7 +26,11 @@ void LDR::begin()
     };
     config.begin();
     for (int i = 0; i < 15; ++i)
+    {
         config.write("LDR_Map", ldr_map[i]);
+    }
+
+    log_i("LDR: ", config.getValueLength("LDR_Map"));
     // config.write("ldr_map", ldrLookupTable);
     config.write("LDR_RL10", _RL10);
     config.write("LDR_GAMMA", _GAMMA);
