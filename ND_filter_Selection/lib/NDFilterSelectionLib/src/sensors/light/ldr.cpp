@@ -62,7 +62,7 @@ float LDR::getLux()
     float lux = pow(_RL10 * 1e3 * pow(10.0, _GAMMA) / resistance, (1.0 / _GAMMA));
     char buffer[100];
     dtostrf(lux, 10, 3, buffer);
-    log_i("%s\n", buffer);
+    log_d("%s\n", buffer);
     return lux;
 }
 
@@ -72,10 +72,47 @@ void LDR::checkLuxState()
 
     float ldr_map_temp[15];
     config.read("LDR_Map", *ldr_map_temp);
-    for (auto &it : ldr_map_temp)
+    for(int i = 0; i < sizeof(ldr_map_temp) / sizeof(ldr_map_temp); ++i)
     {
-        log_i("%f\n", it);
+        log_i("LDR: %f\n", ldr_map_temp[i]);
     }
+
+    /* if(lux >= ldr_map_temp[0] && lux <= ldr_map_temp[1])
+    {
+        log_i("LDR: %f\n", lux);
+    }
+    else if(lux >= ldr_map_temp[2] && lux <= ldr_map_temp[3])
+    {
+        log_i("LDR: %f\n", lux);
+    }
+    else if(lux >= ldr_map_temp[4] && lux <= ldr_map_temp[5])
+    {
+        log_i("LDR: %f\n", lux);
+    }
+    else if(lux >= ldr_map_temp[6] && lux <= ldr_map_temp[7])
+    {
+        log_i("LDR: %f\n", lux);
+    }
+    else if(lux >= ldr_map_temp[8] && lux <= ldr_map_temp[9])
+    {
+        log_i("LDR: %f\n", lux);
+    }
+    else if(lux >= ldr_map_temp[10] && lux <= ldr_map_temp[11])
+    {
+        log_i("LDR: %f\n", lux);
+    }
+    else if(lux >= ldr_map_temp[12] && lux <= ldr_map_temp[13])
+    {
+        log_i("LDR: %f\n", lux);
+    }
+    else if(lux >= ldr_map_temp[14] && lux <= ldr_map_temp[15])
+    {
+        log_i("LDR: %f\n", lux);
+    }
+    else
+    {
+        log_e("error: %f\n", lux);
+    } */
 }
 
 /* void LDR::printMap(String comment, const std::map<String, float> &map)
