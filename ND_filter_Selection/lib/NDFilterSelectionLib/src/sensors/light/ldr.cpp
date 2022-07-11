@@ -27,25 +27,24 @@ void LDR::begin()
         {"Brightest sunlight", 120000},
     };
     config.begin();
-    for (int i = 0; i < 15; ++i)
+    for (int i = 0; i < sizeof(ldr_map) / sizeof(ldr_map[0]); ++i)
     {
         config.write("LDR_Map", ldr_map[i]);
     }
     delay(100);
-    log_i("LDR: %d", config.getValueLength("LDR_Map"));
     // config.write("ldr_map", ldrLookupTable);
-    config.write("LDR_RL10", _RL10);
-    config.write("LDR_GAMMA", _GAMMA);
 }
 
 void LDR::setRL10(float RL10)
 {
     _RL10 = RL10;
+    config.write("LDR_RL10", _RL10);
 }
 
 void LDR::setGamma(float gamma)
 {
     _GAMMA = gamma;
+    config.write("LDR_GAMMA", _GAMMA);
 }
 
 float LDR::getLux()
@@ -72,7 +71,7 @@ void LDR::checkLuxState()
     float lux = getLux();
 
     float ldr_map_temp[15];
-    config.read("LDR_Map", ldr_map_temp);
+    config.read("LDR_Map", *ldr_map_temp);
     for (auto &it : ldr_map_temp)
     {
         log_i("%f\n", it);
