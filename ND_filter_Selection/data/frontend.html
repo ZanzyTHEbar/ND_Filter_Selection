@@ -18,8 +18,23 @@
         <p align="center">
             This tool is designed to help you select the filters you want to use in your analysis.
         </p>
-        <div id="rec_text"></div>
-        <div id="lux_text"></div>
+        <form>
+            <section class="form-pane">
+                <div class="form-container">
+                    <section class="form-item">
+                        <label for="rec_text">
+                            Recommendation:
+                            <div id="rec_text"></div>
+                        </label>
+                        <br>
+                        <label for="lux_text">
+                            Current Lux:
+                            <div id="lux_text"></div>
+                        </label>
+                    </section>
+                </div>
+            </section>
+        </form>
     </div>
 </body>
 <script type="text/javascript">
@@ -30,7 +45,6 @@
         lux_level = jsonData.lux_level;
         recommendation_text = jsonData.recommendation;
     }
-    window.setInterval(grabData, 1000);
 
     function content(divSelector, value) {
         document.querySelector(divSelector).innerHTML = value;
@@ -50,7 +64,9 @@
             console.error(err);
         }
     }
-    window.setInterval(function() {
+
+    window.setInterval(grabData, 1000);
+    window.setInterval(function () {
         content("#rec_text", recommendation_text);
         content("#lux_text", lux_level);
     }, 1000);

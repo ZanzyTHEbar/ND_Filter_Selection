@@ -34,50 +34,17 @@ br {
   width: 100%;
 }
 
-.centeredDiv {
+div {
+  margin-bottom: 10px;
+}
+
+/* .centeredDiv {
   text-align: center;
   justify-content: space-around;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-}
-
-.flex-container {
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  width: 100%;
-  padding: 0vw;
-  text-align: center;
-}
-
-.flex-item {
-  width: 13vw;
-  height: 13vw;
-  padding: 0vw;
-  background: #009cb8;
-  font-size: 10vw;
-  text-align: center;
-  vertical-align: middle;
-  border-radius: 3vw;
-  border-color: rgb(234, 255, 255);
-
-  border-style: solid;
-  border-width: 1vw;
-  box-shadow: 1vw 1vw 1vw #001729;
-}
-
-.infoPane {
-  display: none;
-}
-
-.infoPaneShow {
-  display: inherit;
-  color: ivory;
-  text-emphasis: #1f51ff;
-  text-align: center;
-}
+} */
 
 .container {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
@@ -95,6 +62,80 @@ br {
   border-radius: 10px;
   color: white;
   text-align: center;
+}
+
+.form-pane {
+  transition: 0.3s;
+  border-radius: 8px;
+  border: 1px solid;
+  border-color: #696 #363 #363 #696;
+  background-color: #09269c;
+  transition: transform 0.2s; /* Animation */
+  list-style-type: none;
+}
+
+.form-pane:hover {
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+  transform: scale(
+    1.2
+  ); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+.form-container {
+  padding: 16px 16px 16px;
+  list-style-type: none;
+  border-radius: 8px;
+}
+
+.form-item label {
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+  padding-right: 25px;
+  padding-left: 9px;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-flow: row wrap;
+}
+
+.form-row {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.5em;
+}
+
+#rec_text {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 1px 0 #efefef;
+  animation: 5s ease 0s normal forwards 1 fadeIn;
+  display: flex;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-flow: row wrap;
+}
+
+#lux_text {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 1px 0 #efefef;
+  animation: 5s ease 0s normal forwards 1 fadeIn;
+  display: flex;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-flow: row wrap;
 }
 
 /* Smartphones (portrait and landscape) ----------- */
@@ -145,4 +186,45 @@ br {
   100% {
     opacity: 1;
   }
+}
+
+/* @keyframes up-bump {
+  0% {
+    padding-top: 2em;
+  }
+  50% {
+    padding-top: 1.5em;
+  }
+  100% {
+    padding-top: 2em;
+  }
+}
+@keyframes down-bump {
+  0% {
+    padding-top: 2em;
+  }
+  50% {
+    padding-top: 2.5em;
+  }
+  100% {
+    padding-top: 2em;
+  }
+}
+ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6d7faeb4;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6d7fae;
 }
