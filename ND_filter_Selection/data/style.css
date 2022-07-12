@@ -30,6 +30,20 @@ p {
   animation: 5s ease 0s normal forwards 1 fadeIn;
 }
 
+li {
+  color: #efefef;
+  line-height: 1.3;
+  text-shadow: 0 1px 0 #efefef;
+  letter-spacing: 5px;
+}
+
+form {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 100%;
+}
+
+
 br {
   width: 100%;
 }
