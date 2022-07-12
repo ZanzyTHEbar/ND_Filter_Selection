@@ -41,14 +41,25 @@ const float ldrLookupTable[] = {
 
 class LDR
 {
+private:
+    struct Data_t
+    {
+        float lux;
+        String recommendation;
+    };
+
+    Data_t data;
+    float getLux();
+
 public:
     LDR();
     virtual ~LDR();
     void begin();
     void checkLuxState();
 
-private:
-    float getLux();
+    // functions to get and set Data_t
+    Data_t getData();
+    void setData(Data_t data);
 };
 extern LDR ldr;
 #endif // LDR_HPP

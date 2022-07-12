@@ -4,7 +4,7 @@ LEDManager::LEDManager(uint8_t pin) : _ledPin(pin), _previousMillis(0), _ledStat
 
 LEDManager::~LEDManager() {}
 
-void LEDManager::setupLED()
+void LEDManager::begin()
 {
     pinMode(_ledPin, OUTPUT);
     onOff(false);

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    /* Smartphones (portrait and landscape) ----------- */
+    @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {}
+
+    /* Smartphones (landscape) ----------- */
+    @media only screen and (min-width : 321px) {}
+
+    /* Smartphones (portrait) ----------- */
+    @media only screen and (max-width : 320px) {}
+
+    @media screen and (min-width: 600px) {
+        .hereIsMyClass {
+            width: 30%;
+            float: right;
+        }
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ND Filter Selection Tool</title>
+</head>
+
+<body>
+    <h1>Frontend</h1>
+    <p>
+        Welcome to the ND Filter Selection Tool.
+    </p>
+    <script type="text/javascript">
+        async function grabData() {
+            jsonData = await JSON.parse(await getHTML("/data.json"));
+            console.log(jsonData);
+        }
+
+        window.setInterval(grabData, 1000);
+
+        async function getHTML(url, sendTime = true) {
+            try {
+                let response = {};
+                if (sendTime == true) {
+                    response = await fetch(url + "?" + (new Date().getTime() / 1000));
+                } else {
+                    response = await fetch(url);
+                }
+
+                return await response.text();
+
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        grabData();
+    </script>
+</body>
+
+</html>

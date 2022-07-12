@@ -8,7 +8,7 @@ public:
     LEDManager(byte pin);
     virtual ~LEDManager();
 
-    void setupLED();
+    void begin();
     void onOff(bool state) const;
     void blink(unsigned long time);
     void displayStatus();
