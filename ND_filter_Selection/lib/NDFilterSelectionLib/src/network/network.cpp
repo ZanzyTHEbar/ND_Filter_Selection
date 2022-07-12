@@ -190,7 +190,6 @@ void Network::SetupWebServer()
 
     log_i("[INFO]: Configuring access point...\n");
     WiFi.mode(WIFI_AP);
-    WiFi.setTxPower(WIFI_POWER_11dBm);
 
     // You can remove the password parameter if you want the AP to be open.
     log_i("Wifi Connection Failed. \r\nStarting AP. \r\nAP IP address: ");
@@ -205,6 +204,7 @@ void Network::SetupWebServer()
     {
         WiFi.softAP(WIFI_SSID, WIFI_PASS, 10, 0, 3); // AP mode with password
     }
+    WiFi.setTxPower(WIFI_POWER_11dBm);
 
     networkRoutes(); // call the network routes function to setup the routes
 }

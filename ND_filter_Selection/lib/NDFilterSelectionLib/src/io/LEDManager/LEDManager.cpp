@@ -65,4 +65,4 @@ void LEDManager::indicateWaterLevel(int level)
     }
 }
 
-LEDManager ledManager(26); //! TODO: replace with a custom pin number
+LEDManager ledManager(27); //! TODO: replace with a custom pin number

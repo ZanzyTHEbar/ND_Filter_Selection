@@ -20,5 +20,6 @@ void loop()
   ledManager.displayStatus();
   ledManager.blink(1000L);
   network.createJSONDocument(ldr.getData().lux, ldr.getData().recommendation);
+  delay(1000);
   // put your main code here, to run repeatedly:
 }

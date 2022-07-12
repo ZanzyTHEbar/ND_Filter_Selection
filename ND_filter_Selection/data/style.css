@@ -183,16 +183,21 @@ input[type="button"]:hover {
   background-color: #034078;
 }
 
-.wificreds label {
-  font-size: 1.2rem;
-  width: 100px;
-  display: inline-block;
-  text-align: right;
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
 }
 
-.mqttcreds label {
-  font-size: 1.2rem;
-  width: 120px;
-  display: inline-block;
-  text-align: right;
+/* Smartphones (landscape) ----------- */
+@media only screen and (min-width: 321px) {
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width: 320px) {
+}
+
+@media screen and (min-width: 600px) {
+  .hereIsMyClass {
+    width: 30%;
+    float: right;
+  }
 }
