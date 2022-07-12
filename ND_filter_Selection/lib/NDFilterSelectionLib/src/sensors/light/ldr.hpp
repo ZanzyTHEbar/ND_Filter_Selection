@@ -45,15 +45,10 @@ public:
     LDR();
     virtual ~LDR();
     void begin();
-
-    void setRL10(float RL10);
-    void setGamma(float gamma);
     void checkLuxState();
 
 private:
     float getLux();
-    float _GAMMA;
-    float _RL10;
 };
 extern LDR ldr;
 #endif // LDR_HPP

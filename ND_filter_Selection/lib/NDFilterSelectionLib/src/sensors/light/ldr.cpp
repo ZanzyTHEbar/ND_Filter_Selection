@@ -1,23 +1,8 @@
 #include "ldr.hpp"
 
-LDR::LDR() : _GAMMA(0.7), _RL10(50) {}
+LDR::LDR() {}
 
 LDR::~LDR() {}
-
-void LDR::begin()
-{
-    pinMode(LDR_PIN, INPUT);
-}
-
-void LDR::setRL10(float RL10)
-{
-    _RL10 = RL10;
-}
-
-void LDR::setGamma(float gamma)
-{
-    _GAMMA = gamma;
-}
 
 float LDR::getLux()
 {
