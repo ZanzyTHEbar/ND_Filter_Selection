@@ -107,6 +107,7 @@ void Network::networkRoutes()
               {
                   delay(100);
                   String temp = _jsonDocument;
+                  log_d("%s", temp.c_str());
                   request->send(200, MIMETYPE_JSON, temp);
                   temp = ""; });
 
@@ -176,7 +177,7 @@ void Network::SetupServer()
 }
 
 /**
- * @brief Setup the network stack and routes - fail to AP mode if STA fails
+ * @brief Setup the network stack and routes
  *
  */
 void Network::SetupWebServer()
@@ -209,54 +210,13 @@ void Network::SetupWebServer()
     networkRoutes(); // call the network routes function to setup the routes
 }
 
-// ######################## server functions #########################
-
-/******************************************************************************
- * Function: Check Network Connection Loop
- * Description: This function checks the Network connection and reconnects if necessary - is called in the loop() function every 5 seconds
- * Parameters: None
- * Return: None
- ******************************************************************************/
-void Network::CheckNetworkLoop()
-{
-    // run current function every 5 seconds
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        _wifiConnected = false;
-        log_i("Wifi is not connected\n");
-    }
-    else
-    {
-        _wifiConnected = true;
-        log_i("Wifi is connected\n");
-        log_i("[INFO]: WiFi Connected! Open http://%s in your browser\n", WiFi.localIP().toString().c_str());
-    }
-}
-
-void Network::CheckConnectionLoop_Active()
-{
-    unsigned long currentMillis = millis();
-    // if WiFi is down, try reconnecting
-    if (!_wifiConnected && (currentMillis - _previousMillis >= _interval))
-    {
-        Serial.print(millis());
-        Serial.println("Reconnecting to WiFi...");
-        WiFi.disconnect(); // disconnect from previous Access Point's - if connected
-        WiFi.reconnect();
-        _previousMillis = currentMillis;
-    }
-}
+// ######################## server functions ###############################
 
 void Network::createJSONDocument(float lux, String recommendation)
 {
-    String json = "";
-    json += R"====({)====";
-    json += R"====("lux_level":)====";
-    json += (String)lux + ",\n";
-    R"====("recommendation":)====";
-    json += recommendation + "\n";
-    json += R"====(})====";
-    _jsonDocument = json;
+    char buffer[100];
+    snprintf(buffer, sizeof(buffer), "{\"lux_level\": %f, \"recommendation\": \"%s\"}", lux, recommendation.c_str());
+    _jsonDocument = buffer;
 }
 
 Network network;

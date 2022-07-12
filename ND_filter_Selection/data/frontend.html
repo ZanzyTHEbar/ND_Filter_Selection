@@ -10,35 +10,50 @@
 </head>
 
 <body>
-    <h1>Frontend</h1>
-    <p align="center">
-        Welcome to the ND Filter Selection Tool.
-    </p>
-    <script type="text/javascript">
-        async function grabData() {
-            jsonData = await JSON.parse(await getHTML("/data.json"));
-            console.log(jsonData);
-        }
-
-        window.setInterval(grabData, 1000);
-
-        async function getHTML(url, sendTime = true) {
-            try {
-                let response = {};
-                if (sendTime == true) {
-                    response = await fetch(url + "?" + (new Date().getTime() / 1000));
-                } else {
-                    response = await fetch(url);
-                }
-
-                return await response.text();
-
-            } catch (err) {
-                console.error(err);
-            }
-        }
-        grabData();
-    </script>
+    <div class="container">
+        <h1>Filter Selection Tool</h1>
+        <p align="center">
+            Welcome to the Filter Selection Tool.
+        </p>
+        <p align="center">
+            This tool is designed to help you select the filters you want to use in your analysis.
+        </p>
+        <div id="rec_text"></div>
+        <div id="lux_text"></div>
+    </div>
 </body>
+<script type="text/javascript">
+    var lux_level = 0;
+    var recommendation_text = "";
+    async function grabData() {
+        jsonData = await JSON.parse(await getHTML("/data.json"));
+        lux_level = jsonData.lux_level;
+        recommendation_text = jsonData.recommendation;
+    }
+    window.setInterval(grabData, 1000);
+
+    function content(divSelector, value) {
+        document.querySelector(divSelector).innerHTML = value;
+    }
+
+    async function getHTML(url, sendTime = true) {
+        try {
+            let response = {};
+            if (sendTime == true) {
+                response = await fetch(url + "?" + (new Date().getTime() / 1000));
+            } else {
+                response = await fetch(url);
+            }
+            return await response.text();
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    window.setInterval(function() {
+        content("#rec_text", recommendation_text);
+        content("#lux_text", lux_level);
+    }, 1000);
+</script>
 
 </html>
