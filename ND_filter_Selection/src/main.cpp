@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "sensors/light/ldr.hpp"
+#include "io/LEDManager/LEDManager.hpp"
 
 void setup()
 {

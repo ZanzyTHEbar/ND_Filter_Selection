@@ -1,7 +1,5 @@
 #include "ldr.hpp"
 
-Config config("config", "Project_Config");
-
 LDR::LDR() : _GAMMA(0.7), _RL10(50) {}
 
 LDR::~LDR() {}
@@ -9,119 +7,102 @@ LDR::~LDR() {}
 void LDR::begin()
 {
     pinMode(LDR_PIN, INPUT);
-    Config::LDR_t ldr_map[] = {
-        {"Starlight-overcast-no moon", 0.0001},
-        {"Venus at brightest", 0.00014},
-        {"Starlight-no moon-no airglow", 0.0002},
-        {"Starlight-no moon", 0.002},
-        {"Quarter Moon", 0.01},
-        {"Full Moon", 0.25},
-        {"Night Time", 0.0},
-        {"Fully OverCast", 40},
-        {"Extreme of thickest storm clouds, midday", 200},
-        {"Sunrise or Sunset", 400},
-        {"Overcast", 2000},
-        {"Shade with clear skies", 20000},
-        {"Daylight", 109880},
-        {"Bright sunlight", 111000},
-        {"Brightest sunlight", 120000},
-    };
-    config.begin();
-    for (int i = 0; i < sizeof(ldr_map) / sizeof(ldr_map[0]); ++i)
-    {
-        config.write("LDR_Map", ldr_map[i]);
-    }
-    delay(100);
-    // config.write("ldr_map", ldrLookupTable);
 }
 
 void LDR::setRL10(float RL10)
 {
     _RL10 = RL10;
-    config.write("LDR_RL10", _RL10);
 }
 
 void LDR::setGamma(float gamma)
 {
     _GAMMA = gamma;
-    config.write("LDR_GAMMA", _GAMMA);
 }
 
 float LDR::getLux()
 {
-    // Convert the analog value into lux value:
-    float readLDR = analogRead(LDR_PIN);
-#if defined(ESP32)
-    float voltage = readLDR / 4096.0 * 3.3;
-    float resistance = 2000.0 * voltage / (1.0 - voltage / 3.3);
-#else  // defined(ESP32)
-    float voltage = readLDR / 1024.0 * 5.0;
-    float resistance = 2000.0 * voltage / (1.0 - voltage / 5.0);
-#endif // defined(ESP32)
-
-    float lux = pow(_RL10 * 1e3 * pow(10.0, _GAMMA) / resistance, (1.0 / _GAMMA));
-    char buffer[100];
-    dtostrf(lux, 10, 3, buffer);
-    log_d("%s\n", buffer);
-    return lux;
+    // Perform the analog to digital conversion
+    float _ldrRawData = analogRead(LDR_PIN);
+    // RESISTOR VOLTAGE_CONVERSION
+    // Convert the raw digital data back to the voltage that was measured on the analog pin
+    float _resistorVoltage = _ldrRawData / MAX_ADC_READING * ADC_REF_VOLTAGE;
+    // voltage across the LDR is the 3V supply minus the 5k resistor voltage
+    float _ldrVoltage = ADC_REF_VOLTAGE - _resistorVoltage;
+    // LDR_RESISTANCE_CONVERSION
+    // resistance that the LDR would have for that voltage
+    float _ldrResistance = _ldrVoltage / _resistorVoltage * REF_RESISTANCE;
+    // LDR_LUX
+    // Change the code below to the proper conversion from ldrResistance to
+    // ldrLux
+    float _ldrLux = LUX_CALC_SCALAR * pow(_ldrResistance, LUX_CALC_EXPONENT);
+    // print out the results
+    log_i("LDR Raw Data   : %.3f", _ldrRawData);
+    log_i("LDR Voltage : %.3f volts", _ldrVoltage);
+    log_i("LDR Resistance : %.3f Ohms", _ldrResistance);
+    log_i("LDR Illuminance: %.3f\n", _ldrLux);
+    return _ldrLux;
 }
 
 void LDR::checkLuxState()
 {
     float lux = getLux();
 
-    float ldr_map_temp[15];
-    config.read("LDR_Map", *ldr_map_temp);
-    for(int i = 0; i < sizeof(ldr_map_temp) / sizeof(ldr_map_temp); ++i)
+    if (lux >= ldrLookupTable[0] && lux <= ldrLookupTable[1])
     {
-        log_i("LDR: %f\n", ldr_map_temp[i]);
+        log_i("Pitch Black: %.3f\n", lux);
     }
-
-    /* if(lux >= ldr_map_temp[0] && lux <= ldr_map_temp[1])
+    else if (lux >= ldrLookupTable[2] && lux <= ldrLookupTable[3])
     {
-        log_i("LDR: %f\n", lux);
+        log_i("Very Dark: %.3f\n", lux);
     }
-    else if(lux >= ldr_map_temp[2] && lux <= ldr_map_temp[3])
+    else if (lux >= ldrLookupTable[4] && lux <= ldrLookupTable[5])
     {
-        log_i("LDR: %f\n", lux);
+        log_i("Dark Indoors: %.3f\n", lux);
     }
-    else if(lux >= ldr_map_temp[4] && lux <= ldr_map_temp[5])
+    else if (lux >= ldrLookupTable[6] && lux <= ldrLookupTable[7])
     {
-        log_i("LDR: %f\n", lux);
+        log_i("Dim Indoors: %.3f\n", lux);
     }
-    else if(lux >= ldr_map_temp[6] && lux <= ldr_map_temp[7])
+    else if (lux >= ldrLookupTable[8] && lux <= ldrLookupTable[9])
     {
-        log_i("LDR: %f\n", lux);
+        log_i("Normal Indoors: %.3f\n", lux);
     }
-    else if(lux >= ldr_map_temp[8] && lux <= ldr_map_temp[9])
+    else if (lux >= ldrLookupTable[10] && lux <= ldrLookupTable[11])
     {
-        log_i("LDR: %f\n", lux);
+        log_i("Bright Indoors: %.3f\n", lux);
     }
-    else if(lux >= ldr_map_temp[10] && lux <= ldr_map_temp[11])
+    else if (lux >= ldrLookupTable[12] && lux <= ldrLookupTable[13])
     {
-        log_i("LDR: %f\n", lux);
+        log_i("Dim Outdoors: %.3f\n", lux);
     }
-    else if(lux >= ldr_map_temp[12] && lux <= ldr_map_temp[13])
+    else if (lux >= ldrLookupTable[14] && lux <= ldrLookupTable[15])
     {
-        log_i("LDR: %f\n", lux);
+        log_i("Cloudy Outdoors: %.3f\n", lux);
     }
-    else if(lux >= ldr_map_temp[14] && lux <= ldr_map_temp[15])
+    else if (lux >= ldrLookupTable[16] && lux <= ldrLookupTable[17])
     {
-        log_i("LDR: %f\n", lux);
+        log_i("Bright Overcast: %.3f\n", lux);
+    }
+    else if (lux >= ldrLookupTable[18] && lux <= ldrLookupTable[19])
+    {
+        log_i("Normal Daylight: %.3f\n", lux);
+    }
+    else if (lux >= ldrLookupTable[20] && lux <= ldrLookupTable[21])
+    {
+        log_i("Bright Daylight: %.3f\n", lux);
+    }
+    else if (lux >= ldrLookupTable[22] && lux <= ldrLookupTable[23])
+    {
+        log_i("Very Bright: %.3f\n", lux);
+    }
+    else if (lux >= ldrLookupTable[24] && lux <= ldrLookupTable[25])
+    {
+        log_i("Brightest: %.3f\n", lux);
     }
     else
     {
-        log_e("error: %f\n", lux);
-    } */
-}
-
-/* void LDR::printMap(String comment, const std::map<String, float> &map)
-{
-    log_i("%s\n", comment.c_str());
-    for (auto &it : map)
-    {
-        log_i("%s: %f\n", it.first.c_str(), it.second);
+        log_i("Error: %.3f\n", lux);
     }
-} */
+}
 
 LDR ldr;
