@@ -12,10 +12,10 @@ void LDR::begin()
 float LDR::getLux()
 {
     // Perform the analog to digital conversion
-    float _ldrRawData = analogRead(LDR_PIN);
+    int _ldrRawData = analogRead(LDR_PIN);
     // RESISTOR VOLTAGE_CONVERSION
     // Convert the raw digital data back to the voltage that was measured on the analog pin
-    float _resistorVoltage = _ldrRawData / MAX_ADC_READING * ADC_REF_VOLTAGE;
+    float _resistorVoltage = (float)_ldrRawData / MAX_ADC_READING * ADC_REF_VOLTAGE;
     // voltage across the LDR is the 3V supply minus the 5k resistor voltage
     float _ldrVoltage = ADC_REF_VOLTAGE - _resistorVoltage;
     // LDR_RESISTANCE_CONVERSION
@@ -26,7 +26,7 @@ float LDR::getLux()
     // ldrLux
     float _ldrLux = LUX_CALC_SCALAR * pow(_ldrResistance, LUX_CALC_EXPONENT);
     // print out the results
-    log_i("LDR Raw Data   : %.3f", _ldrRawData);
+    log_i("LDR Raw Data   : %d", _ldrRawData);
     log_i("LDR Voltage : %.3f volts", _ldrVoltage);
     log_i("LDR Resistance : %.3f Ohms", _ldrResistance);
     log_i("LDR Illuminance: %.3f\n", _ldrLux);
