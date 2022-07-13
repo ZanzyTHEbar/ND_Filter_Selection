@@ -47,75 +47,80 @@ void LDR::checkLuxState()
 {
     float lux = getLux();
 
-    if (lux >= ldrLookupTable[0] && lux <= ldrLookupTable[1])
+    if (lux <= 0)
     {
         log_i("Pitch Black: %.3f\n", lux);
-        data = {lux, "Pitch Black"};
+        data = {lux, "No Filter"};
+    }
+    else if (lux >= ldrLookupTable[0] && lux <= ldrLookupTable[1])
+    {
+        log_i("Pitch Black: %.3f\n", lux);
+        data = {lux, "No Filter"};
     }
     else if (lux >= ldrLookupTable[2] && lux <= ldrLookupTable[3])
     {
         log_i("Very Dark: %.3f\n", lux);
-        data = {lux, "Very Dark"};
+        data = {lux, "No Filter"};
     }
     else if (lux >= ldrLookupTable[4] && lux <= ldrLookupTable[5])
     {
         log_i("Dark Indoors: %.3f\n", lux);
-        data = {lux, "Dark Indoors"};
+        data = {lux, "No Filter"};
     }
     else if (lux >= ldrLookupTable[6] && lux <= ldrLookupTable[7])
     {
         log_i("Dim Indoors: %.3f\n", lux);
-        data = {lux, "Dim Indoors"};
+        data = {lux, "ND4"};
     }
     else if (lux >= ldrLookupTable[8] && lux <= ldrLookupTable[9])
     {
         log_i("Normal Indoors: %.3f\n", lux);
-        data = {lux, "Normal Indoors"};
+        data = {lux, "ND4"};
     }
     else if (lux >= ldrLookupTable[10] && lux <= ldrLookupTable[11])
     {
         log_i("Bright Indoors: %.3f\n", lux);
-        data = {lux, "Bright Indoors"};
+        data = {lux, "ND4"};
     }
     else if (lux >= ldrLookupTable[12] && lux <= ldrLookupTable[13])
     {
         log_i("Dim Outdoors: %.3f\n", lux);
-        data = {lux, "Dim Outdoors"};
+        data = {lux, "ND8"};
     }
     else if (lux >= ldrLookupTable[14] && lux <= ldrLookupTable[15])
     {
         log_i("Cloudy Outdoors: %.3f\n", lux);
-        data = {lux, "Cloudy Outdoors"};
+        data = {lux, "ND8"};
     }
     else if (lux >= ldrLookupTable[16] && lux <= ldrLookupTable[17])
     {
         log_i("Bright Overcast: %.3f\n", lux);
-        data = {lux, "Bright Overcast"};
+        data = {lux, "ND8"};
     }
     else if (lux >= ldrLookupTable[18] && lux <= ldrLookupTable[19])
     {
         log_i("Normal Daylight: %.3f\n", lux);
-        data = {lux, "Normal Daylight"};
+        data = {lux, "ND16"};
     }
     else if (lux >= ldrLookupTable[20] && lux <= ldrLookupTable[21])
     {
         log_i("Bright Daylight: %.3f\n", lux);
-        data = {lux, "Bright Daylight"};
+        data = {lux, "ND16"};
     }
     else if (lux >= ldrLookupTable[22] && lux <= ldrLookupTable[23])
     {
         log_i("Very Bright: %.3f\n", lux);
-        data = {lux, "Very Bright"};
+        data = {lux, "ND16 or ND32"};
     }
     else if (lux >= ldrLookupTable[24] && lux <= ldrLookupTable[25])
     {
         log_i("Brightest: %.3f\n", lux);
-        data = {lux, "Brightest"};
+        data = {lux, "ND32"};
     }
     else
     {
         log_i("Error: %.3f\n", lux);
-        data = {lux, "Error"};
+        data = {lux, "ND32 or ND64"};
     }
 }
 
