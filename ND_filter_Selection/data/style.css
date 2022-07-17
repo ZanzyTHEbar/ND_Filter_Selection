@@ -37,10 +37,14 @@ li {
   letter-spacing: 5px;
 }
 
+ul {
+  margin-bottom: 100%;
+}
+
 form {
   text-align: center;
   margin-top: 20px;
-  margin-bottom: 100%;
+  margin-bottom: 5%;
 }
 
 br {
