@@ -2,6 +2,9 @@
 #include "sensors/light/ldr.hpp"
 #include "io/LEDManager/LEDManager.hpp"
 #include "network/network.hpp"
+#include <timeObj.h>
+
+timeObj timer(1000);
 
 void setup()
 {
@@ -16,8 +19,12 @@ void setup()
 
 void loop()
 {
-  ldr.checkLuxState();
-  ledManager.displayStatus();
-  ledManager.blink(1000L);
-  network.createJSONDocument(ldr.getData().lux, ldr.getData().recommendation);
+  if (timer.ding())
+  {
+    ldr.checkLuxState();
+    ledManager.displayStatus();
+    ledManager.blink(1000L);
+    network.createJSONDocument(ldr.getData().lux, ldr.getData().recommendation);
+    timer.start();
+  }
 }
